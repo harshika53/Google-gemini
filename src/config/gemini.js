@@ -1,9 +1,6 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";  // ✅ Use `import`
-import dotenv from "dotenv"; // ✅ Load environment variables
+import { GoogleGenerativeAI } from "@google/generative-ai";  
 
-dotenv.config(); // Load variables from .env
-
-const apiKey = import.meta.env.VITE_GOOGLE_API_KEY; // ✅ Get API key from environment
+const apiKey = import.meta.env.VITE_GOOGLE_API_KEY; // ✅ Vite automatically loads env variables
 const genAI = new GoogleGenerativeAI(apiKey);
 
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
@@ -23,4 +20,4 @@ async function run(prompt) {
   console.log(await result.response.text()); // ✅ Corrected await
 }
 
-export default run; // ✅ Correct export syntax for ES modules
+export default run;
