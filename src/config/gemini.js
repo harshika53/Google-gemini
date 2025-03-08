@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";  
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const apiKey = import.meta.env.VITE_GOOGLE_API_KEY; // ✅ Vite automatically loads env variables
 const genAI = new GoogleGenerativeAI(apiKey);
@@ -14,10 +14,18 @@ const generationConfig = {
 };
 
 async function run(prompt) {
-  const chatSession = model.startChat({ generationConfig, history: [] });
+  try {
+    const chatSession = model.startChat({ generationConfig, history: [] });
 
-  const result = await chatSession.sendMessage(prompt);
-  console.log(await result.response.text()); // ✅ Corrected await
+    const result = await chatSession.sendMessage(prompt);
+    const responseText = await result.response.text(); // ✅ Corrected return statement
+
+    console.log(responseText);
+    return responseText;
+  } catch (error) {
+    console.error("Error in run function:", error);
+    return "Error generating response"; // ✅ Return a fallback message
+  }
 }
 
 export default run;
