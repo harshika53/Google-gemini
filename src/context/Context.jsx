@@ -5,23 +5,31 @@ import runChat from "../config/gemini";
 export const Context = createContext(null);
 
 const ContextProvider = (props) => {
-
     const [response, setResponse] = useState("");
-
-    const[input,setInput] = useState("");
+    const [input, setInput] = useState("");
     const [recentPrompt, setRecentPrompt] = useState("");
-    const[prevPrompts, setPrevPrompts] = useState([]);
+    const [prevPrompts, setPrevPrompts] = useState([]);
     const [showResult, setShowResult] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [resultData , setResultData] = useState("");
-
+    const [resultData, setResultData] = useState("");
 
     const onSent = async () => {
+        if (!input.trim()) return; // Empty input check
+
+        setLoading(true);
+        setShowResult(true);
+        setRecentPrompt(input)
+        setResultData(""); // Clear old result
+
         try {
-            const result = await runChat(input);
-            setResponse(result); 
+            const response = await runChat(input.trim()); // Ensure trimmed input
+            setResultData(response);
+            setResponse(response);
         } catch (error) {
             console.error("Error fetching response:", error);
+        } finally {
+            setLoading(false);
+            setInput(""); // Clear input after sending
         }
     };
 
