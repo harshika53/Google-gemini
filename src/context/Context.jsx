@@ -14,22 +14,22 @@ const ContextProvider = (props) => {
     const [resultData, setResultData] = useState("");
 
     const onSent = async () => {
-        if (!input.trim()) return; // Empty input check
+        if (!input.trim()) return; 
 
         setLoading(true);
         setShowResult(true);
-        setRecentPrompt(input)
-        setResultData(""); // Clear old result
+        setRecentPrompt(input);
+        setResultData(""); 
 
         try {
-            const response = await runChat(input.trim()); // Ensure trimmed input
+            const response = await runChat(input.trim()); 
             setResultData(response);
             setResponse(response);
         } catch (error) {
             console.error("Error fetching response:", error);
         } finally {
             setLoading(false);
-            setInput(""); // Clear input after sending
+            setInput(""); 
         }
     };
 
