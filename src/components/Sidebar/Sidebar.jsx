@@ -25,7 +25,7 @@ const Sidebar = () => {
           <div className="recent">
             <p className="recent-title">Recent</p>
             {prevPrompts.map((item, index) => (
-              <div key={index} className="recent-entry">  {/* ✅ Key attribute add kiya */}
+              <div key={index} className="recent-entry">  
                 <img src={assets.message_icon} alt="Message" />
                 <p>{item.slice(0, 18)}...</p>
               </div>
