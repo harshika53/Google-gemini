@@ -1,11 +1,11 @@
 import "./Sidebar.css";
 import { assets } from "../../assets/assets";
-import { useState, useContext } from "react"; // ✅ useContext import kiya
+import { useState, useContext } from "react"; 
 import { Context } from "../../context/Context";
 
 const Sidebar = () => {
   const [extended, setExtended] = useState(false);
-  const { prevPrompts } = useContext(Context); // ✅ Unused variables (`onSent`, `setRecentPrompt`) hata diye
+  const { prevPrompts } = useContext(Context); 
 
   return (
     <div className="sidebar">
