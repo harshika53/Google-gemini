@@ -5,7 +5,6 @@ import runChat from "../config/gemini";
 export const Context = createContext(null);
 
 const ContextProvider = (props) => {
-    const [response, setResponse] = useState("");
     const [input, setInput] = useState("");
     const [recentPrompt, setRecentPrompt] = useState("");
     const [prevPrompts, setPrevPrompts] = useState([]);
@@ -13,27 +12,38 @@ const ContextProvider = (props) => {
     const [loading, setLoading] = useState(false);
     const [resultData, setResultData] = useState("");
 
+    // Function to add words with delay
     const delayPara = (index, nextWord) => {
         setTimeout(() => {
             setResultData(prev => prev + nextWord);
         }, 75 * index);
     };
-  
+
+    const newChat = () => {
+        setLoading(false)
+        setShowResult(false)
+    }
+
     const onSent = async () => {
         if (!input.trim()) return;
 
-        setLoading(true);
-        setShowResult(true);
-        setRecentPrompt(input);
-        setPrevPrompts(prev => [...prev, input]);
-
         try {
-            const response = await runChat(input.trim());
-            setResponse(response);
+            setLoading(true);
+            setShowResult(true);
+
+            // Store input in state
+            setRecentPrompt(input);
+
+            // Prevent duplicate prompts in history
+            setPrevPrompts(prev => [...new Set([...prev, input])]);
+
+            // Get response
+            const response = await runChat(input);
 
             let responseArray = (response || "").split("**");
             let newResponse = "";
 
+            // Formatting the response
             for (let i = 0; i < responseArray.length; i++) {
                 if (i === 0 || i % 2 !== 1) {
                     newResponse += responseArray[i];
@@ -45,11 +55,11 @@ const ContextProvider = (props) => {
             let newResponse2 = newResponse.split("*").join("<br>");
             let newResponseArray = newResponse2.split(" ");
 
-            for (let i = 0; i < newResponseArray.length; i++) {
-                delayPara(i, newResponseArray[i] + " ");
-            }
+            // 🛠 FIX: Clear previous resultData before updating (to prevent duplicate outputs)
+            setResultData(""); 
 
-            setResultData(newResponse2);
+            // Animate words one by one
+            newResponseArray.forEach((word, index) => delayPara(index, word + " "));
 
         } catch (error) {
             console.error("Error fetching response:", error);
@@ -73,7 +83,7 @@ const ContextProvider = (props) => {
         resultData,
         input,
         setInput,
-        response
+        newChat  
     };
 
     return (
